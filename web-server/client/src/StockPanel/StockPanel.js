@@ -1,9 +1,9 @@
 import './StockPanel.css';
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.js';
-
+import _ from 'lodash'; 
 import React from 'react';
-import StockCard from '../StocksCard/StocksCard';
+import StockCard from '../StockCard/StockCard';
 
 class StockPanel extends React.Component{
     constructor(){
@@ -14,7 +14,7 @@ class StockPanel extends React.Component{
 
     componentDidMount() {
         this.loadMoreStocks();
-        this.loadMoreStocks = _.debounce(this.loadMoreStocks, 1000);
+        this.loadMoreStocks =_.debounce(this.loadMoreStocks, 1000);
         window.addEventListener('scroll', this.handleScroll);
     }
 
@@ -24,45 +24,47 @@ class StockPanel extends React.Component{
                       document.documentElement.scrollTop;
         if ((window.innerHeight + scrollY) >= (document.body.offsetHeight - 50)) {
             console.log('Loading more stocks');
-            this.loadMoreNews();
+            this.loadMoreStocks();
         }
     }
 
     loadMoreStocks(){
-        this.setState({
-            stocks:[
-                    {
-                        'url':'',
-                        'title':'AGTC',
-                        'open': 4.7,
-                        'price': 4.8,
-                        'volume': 45239,
-                        'trade_datetime': '2017-09-07 20:00:00 UTC+0000',
-                        'reason':'recommand'
-                    },
-                    {
-                        'url':'',
-                        'title':'AGTC',
-                        'open': 4.7,
-                        'price': 4.8,
-                        'volume': 45239,
-                        'trade_datetime': '2017-09-07 20:00:00 UTC+0000',
-                        'reason':'hot'
-                    }
-                ]
+        // this.setState({
+        //     stocks:[
+        //             {
+        //                 'url':'',
+        //                 'title':'AGTC',
+        //                 'open': 4.7,
+        //                 'price': 4.8,
+        //                 'volume': 45239,
+        //                 'trade_datetime': '2017-09-07 20:00:00 UTC+0000',
+        //                 'reason':'recommand'
+        //             },
+        //             {
+        //                 'url':'',
+        //                 'title':'AGTC',
+        //                 'open': 4.7,
+        //                 'price': 4.8,
+        //                 'volume': 45239,
+        //                 'trade_datetime': '2017-09-07 20:00:00 UTC+0000',
+        //                 'reason':'hot'
+        //             }
+        //         ]
+        // });
+        console.log("here");
+        let request = new Request('http://localhost:3000/stocks', {
+            method: 'GET',
+            cache: 'no-cache'
         });
-        // let request = new Request('http://localhost:3000/stocks', {
-        //     method: 'GET',
-        //     cache: false
-        // });
       
-        // fetch(request)
-        // .then((res) => res.json())
-        // .then((news) => {
-        //     this.setState({
-        //         news:this.state.stocks ? this.state.stocks.concat(stocks) : stocks,
-        //     });
-        // });
+        fetch(request)
+        .then((res) => res.json())
+        .then((stocks) => {
+            console.log(stocks);
+            this.setState({
+            stocks:this.state.stocks ? this.state.stocks.concat(stocks) : stocks
+            });
+        })
     }
 
     renderStocks(){
