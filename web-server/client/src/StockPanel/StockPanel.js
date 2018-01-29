@@ -2,6 +2,7 @@ import './StockPanel.css';
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.js';
 import _ from 'lodash'; 
+import Auth from '../Auth/Auth';
 import React from 'react';
 import StockCard from '../StockCard/StockCard';
 
@@ -54,6 +55,9 @@ class StockPanel extends React.Component{
         console.log("here");
         let request = new Request('http://localhost:3000/stocks', {
             method: 'GET',
+            headers:{
+                'Authorization': 'bearer ' + Auth.getToken(),
+            },
             cache: 'no-cache'
         });
       

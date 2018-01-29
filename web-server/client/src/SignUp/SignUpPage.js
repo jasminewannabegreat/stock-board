@@ -98,9 +98,9 @@ class SignUpPage extends React.Component {
   }
 }
 
-// To make react-router work
-// SignUpPage.contextTypes = {
-//   router: PropTypes.object.isRequired
-// };
+//To make react-router work
+SignUpPage.contextTypes = {
+  router: PropTypes.object.isRequired
+};
 
 export default SignUpPage;
