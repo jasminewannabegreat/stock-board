@@ -1,0 +1,6 @@
+pandas
+pika
+python-jsonrpc
+pymongo
+requests
+tweepy
