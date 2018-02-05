@@ -19,9 +19,8 @@ from cloudAMQP_client import CloudAMQPClient
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 
-STOCKS_TABLE_NAME = "stocks-test1"
+STOCKS_TABLE_NAME = "stocks"
 TWEETS_TABLE_NAME = "stocks-tweets"
-CLICK_LOGS_TABLE_NAME = 'click_logs'
 
 STOCKS_LIMIT = 100
 STOCKS_LIST_BATCH_SIZE = 10
@@ -72,44 +71,16 @@ def getStocksSummariesForUser(user_id, page_num):
     # begin_index = (page_num - 1) * 3
     # end_index = page_num * 3
     # result_stocks = result_stocks[begin_index:end_index]
-
-    # Get preference for the user
-    # preference = news_recommendation_service_client.getPreferenceForUser(user_id)
-    # topPreference = None
-
-    # if preference is not None and len(preference) > 0:
-    #     topPreference = preference[0]
-
-    # for news in sliced_news:
-    #     # Remove text field to save bandwidth.
-    #     del news['text']
-    #     if news['class'] == topPreference:
-    #         news['reason'] = 'Recommend'
-    #     if news['publishedAt'].date() == datetime.today().date():
-    #         news['time'] = 'today'
-
     return json.loads(dumps(result_stocks))
 
 def getStockForUser(user_id, stock):
     db = mongodb_client.get_db()
     result_stock = list(db[STOCKS_TABLE_NAME].find({'index':stock}))[0]
     result_tweets = list(db[TWEETS_TABLE_NAME].find().sort([('digest', -1)]).limit(50))
-    # return json.loads(dumps(result_stock))
+    return json.loads(dumps(result_stock))
     # print(type(result_stock))
     result_stock['twitter_tweets'] = result_tweets
     return json.loads(dumps(result_stock))
 
 if __name__ == '__main__':
     print(getStockForUser(1,'IBM'))
-
-
-
-# def logNewsClickForUser(user_id, news_id):
-#     message = {'userId': user_id, 'newsId': news_id, 'timestamp': datetime.utcnow()}
-
-#     db = mongodb_client.get_db()
-#     db[CLICK_LOGS_TABLE_NAME].insert(message)
-
-#     # Send log task to machine learning service for prediction
-#     message = {'userId': user_id, 'newsId': news_id, 'timestamp': str(datetime.utcnow())}
-#     cloudAMQP_client.sendMessage(message)
